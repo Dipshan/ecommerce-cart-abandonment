@@ -26,7 +26,7 @@ This repository contains the following key files:
     * Engineers all features, including `is_returning_user`.
     * Saves the final, model-ready `dataset/sessions_df_final_project.parquet` file.
 
-* `run_comprehensive_bakeoff_resumable.py`: **(Step 2)** The main modeling pipeline. This script:
+* `run_comprehensive_bakeoff.py`: **(Step 2)** The main modeling pipeline. This script:
     * Loads the final parquet file.
     * Performs a 70/30 train-test split.
     * Runs a "default" bake-off between four models (LR, RF, XGB, LGBM) with **no class weighting** to get a true balanced baseline.
@@ -73,7 +73,7 @@ python3 process_data_safe.py
 Run the second script to train all the models. This will take **9-10 hours**. It is highly recommended to run this using `nohup` on a server.
 
 ```bash
-nohup python3 run_comprehensive_bakeoff_resumable.py > script.log 2>&1 &
+nohup python3 run_comprehensive_bakeoff.py > script.log 2>&1 &
 ```
 **Output:** This will populate the `results/` folder with all plots and the final `all_model_results.csv`.
 
