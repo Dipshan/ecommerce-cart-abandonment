@@ -26,7 +26,7 @@ This repository contains the following key files:
     * Engineers all features, including `is_returning_user`.
     * Saves the final, model-ready `dataset/sessions_df_final_project.parquet` file.
 
-* `run_comprehensive_bakeoff.py`: **(Step 2)** The main modeling pipeline. This script:
+* `run_comprehensive_bakeoff_resumable.py`: **(Step 2)** The main modeling pipeline. This script:
     * Loads the final parquet file.
     * Performs a 70/30 train-test split.
     * Runs a "default" bake-off between four models (LR, RF, XGB, LGBM) with **no class weighting** to get a true balanced baseline.
@@ -34,11 +34,19 @@ This repository contains the following key files:
     * Runs an extensive, multi-hour `GridSearchCV` on the top 2 models.
     * This script is **resumable**: if it's stopped, it will read the `running_results.csv` and pick up where it left off.
 
+* `train_and_save_champion.py`: **(Step 3)** The final production script. This script:
+    * Takes the winning parameters identified in Step 2.
+    * Re-trains the single Champion Model (XGBoost) on the data.
+    * Saves the actual model object (`.json`) for future use.
+    * Generates and saves the Feature Importance plot.
+
 * `EDA.ipynb`: A Jupyter Notebook used for initial exploratory data analysis.
 
-* `/results/`: This folder contains all the final outputs from the modeling script.
-    * `all_model_results.csv`: The final, sorted leaderboard comparing all 6 models (4 default, 2 tuned).
-    * `*.png`: All confusion matrix plots for each model.
+* `/results/`: This folder contains all the final outputs:
+    * `all_model_results.csv`: The final, sorted leaderboard comparing all 6 models.
+    * `champion_xgb_model.json`: The saved, trained XGBoost model.
+    * `champion_feature_importance.png`: Plot determining which features drove the predictions.
+    * `*.png`: Confusion matrix plots for all models.
 
 ---
 
@@ -70,12 +78,21 @@ python3 process_data_safe.py
 
 ### 3. Step 2: Run the Model Bake-Off
 
-Run the second script to train all the models. This will take **9-10 hours**. It is highly recommended to run this using `nohup` on a server.
+Run the second script to train and tune all models. This will take **9-10 hours**. It is highly recommended to run this using `nohup` on a server.
 
 ```bash
-nohup python3 run_comprehensive_bakeoff.py > script.log 2>&1 &
+nohup python3 run_comprehensive_bakeoff_resumable.py > script.log 2>&1 &
 ```
-**Output:** This will populate the `results/` folder with all plots and the final `all_model_results.csv`.
+**Output:** This generates the leaderboard and confusion matrices in the `results/` folder.
+
+### 4. Step 3: Train & Save Champion
+
+Run the final script to save the winning model. This takes < 1 minute.
+
+```bash
+python3 train_and_save_champion.py
+```
+**Output:** Saves `champion_xgb_model.json` and the Feature Importance plot.
 
 ---
 
@@ -103,3 +120,5 @@ The full model comparison is in `results/all_model_results.csv`.
 3.  **Balanced Model Success:** Our goal of finding a *useful* balanced model was successful. We avoided the "100% recall" trap and built a model that provides actionable intelligence.
 
 4.  **Hypothesis Confirmed:** The 8-feature model (without `max_price`) was highly effective, proving that `max_price` was likely noise.
+
+5.  **Feature Importance:** Analysis of the champion model reveals that `num_carts` is the dominant feature (~96% importance), effectively acting as a filter for window shoppers. However, features like `num_views` and `duration_seconds` are critical for distinguishing between **purchasers** and **abandoners** once a cart has been created.
