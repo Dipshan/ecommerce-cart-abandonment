@@ -223,3 +223,8 @@ logs/
 # checkpoints/
 # outputs/
 
+
+# Dataset files
+dataset/2019-Oct-Optimized.parquet
+dataset/2019-Nov-Optimized.parquet
+dataset/sessions_df_final_project.parquet
