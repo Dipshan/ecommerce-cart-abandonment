@@ -23,10 +23,7 @@ The pipeline is designed for **high-performance computing (HPC)** environments, 
    - High **Precision** (minimize noise in interventions, such as coupons/emails).
 
 3. **User Segmentation**  
-   Cluster users by:
-   - **RFM (Recency, Frequency, Monetary) value**, and  
-   - **Behavioral shopping style** (e.g., browsers vs decisive buyers)  
-   to enable **actionable lifecycle marketing and personalization**.
+   Cluster users by **behavioral shopping style** (e.g., browsers vs decisive buyers) to enable **actionable lifecycle marketing and personalization**.
 
 ---
 
@@ -257,7 +254,7 @@ A few ideas for next steps:
 - **Real-Time Scoring**: Wrap `champion_xgb_model.json` in a REST API for live cart abandonment prediction.  
 - **Uplift Modeling**: Estimate which users **change behavior** if targeted (vs those who would purchase anyway).  
 - **Sequence Models**: Replace session-level features with **event sequences** (RNNs / Transformers).  
-- **Multi-Channel Data**: Incorporate email, push, or ad interactions into RFM and behavioral features.
+- **Multi-Channel Data**: Incorporate email, push, or ad interactions into user value and behavioral features.
 
 ---
 
