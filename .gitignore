@@ -228,3 +228,6 @@ logs/
 dataset/2019-Oct-Optimized.parquet
 dataset/2019-Nov-Optimized.parquet
 dataset/sessions_df_final_project.parquet
+dataset/2019-Oct.csv
+dataset/2019-Nov.csv
+results/23m_event_session_clusters_with_names.parquet

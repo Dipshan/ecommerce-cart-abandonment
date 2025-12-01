@@ -7,7 +7,7 @@ This project analyzes over **109 million user events** from a large multi-catego
 
 The pipeline is designed for **high-performance computing (HPC)** environments, combining:
 
-- **GPU acceleration (RAPIDS/cuDF)** for large-scale aggregation and clustering.
+- **Efficient CPU-based processing** for large-scale aggregation and clustering.
 - **CPU-based Gradient Boosting (XGBoost / LightGBM)** and other ML models for prediction.
 
 ---
@@ -39,7 +39,7 @@ The pipeline is designed for **high-performance computing (HPC)** environments, 
 | **`process_data_safe.py`** | **Step 1: Data Engineering (CPU).** Loads raw CSVs month-by-month to prevent memory overflows. Cleans events (e.g., `price > 0`), labels `is_abandoned`, engineers features (e.g., `is_returning_user`), and aggregates **109M+ events into ~23M sessions**. Saves `dataset/sessions_df_final_project.parquet`. |
 | **`run_comprehensive_bakeoff_resumable.py`** | **Step 2: Model Training & Bake-Off (CPU).** Performs a 70/30 stratified split and runs a balanced bake-off between Logistic Regression, Random Forest, XGBoost, and LightGBM. Uses `GridSearchCV` to tune the top 2 models. **Resumable:** writes progress to `results/running_results.csv` so it can safely resume after interruptions. |
 | **`train_and_save_champion.py`** | **Step 3: Champion Model (CPU).** Re-trains the best-performing model (tuned XGBoost) on the training data, computes feature importance, and saves the model (`champion_xgb_model.json`) and plots. |
-| **`run_user_clustering_unified.py`** | **Step 4: User Clustering (GPU + CPU).** Aggregates all sessions into **user-level profiles** (5.3M+ users) using **RAPIDS cuDF** on the GPU, then runs **MiniBatchKMeans** (CPU) to generate RFM and behavioral clusters. |
+| **`clustering.py`** | **Step 4: User Clustering (CPU).** Aggregates 23M+ sessions, engineers behavioral features, and performs K-Means clustering to identify 8 distinct user behaviors. Generates visualizations and detailed statistics. |
 | **`EDA.ipynb`** | Exploratory Data Analysis notebook for initial dataset sanity checks and hypothesis exploration. |
 
 ### 📊 Results & Artifacts (`results/` folder)
@@ -51,15 +51,15 @@ The pipeline is designed for **high-performance computing (HPC)** environments, 
 | **`champion_xgb_model.json`** | The saved, trained XGBoost model ready for deployment. |
 | **`champion_feature_importance.png`** | Bar chart showing which features drive predictions (e.g., `num_carts`, `num_views`, `duration_seconds`). |
 | **`*_confusion_matrix.png`** | Confusion matrix plots for all candidate models. |
-| **`cluster_profile_rfm.csv`** | Average statistics for each **RFM (value-based)** user cluster. |
-| **`cluster_profile_style.csv`** | Average statistics for each **behavioral (shopping-style)** user cluster. |
-| **`*_clusters.png`** | Visualization plots (e.g., 2D projections or bar charts) summarizing the discovered segments. |
+| **`23m_event_cluster_analysis_detailed.csv`** | Detailed statistics for each of the 8 behavioral clusters. |
+| **`23m_event_clustering_results_detailed.png`** | Comprehensive visualization dashboard showing cluster sizes, abandonment rates, and behaviors. |
+| **`cluster_names_mapping.csv`** | Mapping of cluster IDs to intelligent names (e.g., "High-Risk", "Loyal Window Shopper"). |
 
 ---
 
 ## ⚙️ Setup & Installation
 
-This project targets a **Python 3.10+** environment and was designed for an **HPC cluster** (e.g., 32 CPU cores, 64GB+ RAM) with **optional NVIDIA GPU** for clustering.
+This project targets a **Python 3.10+** environment and was designed for an **HPC cluster** (e.g., 32 CPU cores, 64GB+ RAM).
 
 ### 1. Get the Data
 
@@ -92,26 +92,7 @@ source venv/bin/activate        # On macOS / Linux
 pip install     pandas     pyarrow     scikit-learn     xgboost     lightgbm     matplotlib     seaborn     jupyter
 ```
 
-### 4. Install GPU Requirements (Optional: RAPIDS for Clustering)
 
-GPU acceleration is **optional but strongly recommended** for the user clustering step.
-
-You will need:
-
-- Recent NVIDIA GPU
-- Compatible NVIDIA driver
-- CUDA 11/12
-
-Recommended: use **Conda** to create a RAPIDS environment (example for CUDA 12):
-
-```bash
-conda create -n rapids-env python=3.10
-conda activate rapids-env
-
-conda install -c rapidsai -c conda-forge -c nvidia     rapids=24.10     cuda-version=12.0
-```
-
-> 💡 If RAPIDS is not available on your system, you can modify `run_user_clustering_unified.py` to use pure pandas instead of cuDF (at the cost of runtime).
 
 ---
 
@@ -168,27 +149,24 @@ This script:
 - Saves the model to `results/champion_xgb_model.json`.
 - Generates `results/champion_feature_importance.png`.
 
-### 4. User Clustering & Segmentation (Step 4 — GPU + CPU)
+### 4. User Clustering & Segmentation (Step 4 — CPU)
 
-Builds user-level profiles and segments customers into RFM and behavioral clusters.
+Analyzes user behavior across 23M+ sessions to identify distinct shopping personas.
 
 ```bash
-python3 run_user_clustering_unified.py
+python3 clustering.py
 ```
 
 This script:
-
-- Uses **RAPIDS cuDF** to rapidly aggregate all sessions to user-level stats.
-- Uses **MiniBatchKMeans** to cluster users on:
-  - **RFM (Recency, Frequency, Monetary) features**, and
-  - **Shopping-style features** (view/cart/purchase ratios).
-- Exports cluster profiles and plots to the `results/` directory.
+- Loads optimized parquet data for October and November.
+- Engineers session-level features (e.g., cart-to-view ratio, exploration depth).
+- Performs **K-Means clustering** (k=8) to segment users.
+- Automatically names clusters based on their characteristics (e.g., "High-Risk", "Loyal Window Shopper").
+- Generates comprehensive visualizations and detailed statistics.
 
 **Output:**
-
-- `results/cluster_profile_rfm.csv`
-- `results/cluster_profile_style.csv`
-- `results/*_clusters.png`
+- `results/23m_event_clustering_results_detailed.png`
+- `results/23m_event_cluster_analysis_detailed.csv`
 
 ---
 
@@ -251,58 +229,24 @@ From `results/all_model_results.csv`:
 
 ## 👥 User Clustering & Segmentation
 
-Beyond per-session predictions, the project builds **user-level segments** to inform marketing and personalization strategies.
+The project uses unsupervised learning to identify distinct user behaviors from the 23M+ sessions.
 
 ### Methodology
 
-1. Aggregate 23M+ sessions into **5.3M+ user profiles**.
-2. For each user, compute:
-   - RFM metrics (Recency of last visit, total Frequency, total Monetary value).
-   - Behavioral metrics (e.g., views/session, carts/session, cart-to-purchase conversion).
-3. Run **MiniBatchKMeans** separately for:
-   - **RFM clustering** (value-based segments).
-   - **Shopping-style clustering** (behavioral segments).
+1. **Feature Engineering**: Extracts signals like session duration, event intensity, and conversion ratios.
+2. **Clustering**: Uses **K-Means (k=8)** on robustly scaled features to group similar sessions.
+3. **Intelligent Naming**: Automatically assigns descriptive names to clusters based on their statistical properties (e.g., abandonment rate, price sensitivity).
 
-### 1️⃣ RFM Clusters (Value-Based Personas)
+### Discovered Segments
 
-Representative segments (exact thresholds in `cluster_profile_rfm.csv`):
+The analysis typically identifies segments such as:
 
-- **Champions**  
-  - High spend (e.g., **$764+ average**).  
-  - High visit frequency.  
-  - Extremely valuable for retention and VIP programs.
+- **High-Risk**: Users with items in cart but very high abandonment rates.
+- **Loyal Window Shoppers**: Frequent visitors who rarely buy.
+- **Premium Shoppers**: Users interacting with high-value items.
+- **Quick Browsers**: Short sessions with low engagement.
 
-- **Loyal Window Shoppers**  
-  - Visit often (e.g., **9+ visits**) but spend near zero.  
-  - Likely exploring or price-sensitive; candidates for **targeted discounts** or **UX improvements**.
-
-- **Churned**  
-  - Have not visited in **40+ days**.  
-  - Strong candidates for **win-back campaigns** (email, push, ads).
-
-- **Casual**  
-  - Recent visitors with low to moderate activity and spend.  
-  - Perfect for **onboarding journeys** and general nudges.
-
-### 2️⃣ Shopping Style Clusters (Behavior-Based Personas)
-
-Representative segments (exact stats in `cluster_profile_style.csv`):
-
-- **Decisive Shoppers**  
-  - High **view-to-cart ratio** (~0.60).  
-  - Find what they want quickly and convert efficiently.
-
-- **Browsers**  
-  - Very high **views per session** (e.g., 11+), but relatively low conversion.  
-  - Might be comparing products or exploring categories — ideal for stronger **recommendation systems** and **guided search**.
-
-- **Power Buyers**  
-  - Extremely high **cart-to-purchase conversion rate**.  
-  - Excellent target for **loyalty programs**, **upselling**, and **early access** campaigns.
-
-> 🔍 All cluster statistics and exact thresholds are defined in:
-> - `results/cluster_profile_rfm.csv`
-> - `results/cluster_profile_style.csv`
+> 🔍 **View the Dashboard**: Check `results/23m_event_clustering_results_detailed.png` for a visual breakdown of all clusters.
 
 ---
 
