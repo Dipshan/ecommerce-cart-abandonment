@@ -1,0 +1,7 @@
+model_name,is_tuned,train_time_sec,accuracy,abandoned_precision,abandoned_recall,abandoned_f1,not_abandoned_precision,not_abandoned_recall,not_abandoned_f1,weighted_avg_precision,weighted_avg_recall,weighted_avg_f1
+XGBoost_Tuned,True,1054.27,0.9689,0.715,0.7986,0.7545,0.9871,0.9798,0.9834,0.9708,0.9689,0.9697
+XGBoost,False,19.92,0.9688,0.7154,0.7932,0.7523,0.9868,0.9799,0.9833,0.9705,0.9688,0.9695
+LightGBM_Tuned,True,31513.73,0.9685,0.7117,0.7957,0.7514,0.9869,0.9795,0.9832,0.9705,0.9685,0.9693
+LightGBM,False,16.86,0.9681,0.7082,0.7942,0.7487,0.9868,0.9792,0.983,0.9702,0.9681,0.969
+RandomForest,False,120.96,0.9653,0.6941,0.7491,0.7205,0.984,0.979,0.9815,0.9666,0.9653,0.9659
+LogisticRegression,False,9.72,0.9434,0.5471,0.3035,0.3905,0.957,0.984,0.9703,0.9325,0.9434,0.9357

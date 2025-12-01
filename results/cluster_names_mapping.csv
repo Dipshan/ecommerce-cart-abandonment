@@ -1,0 +1,9 @@
+cluster_id,cluster_name,cluster_description
+0,High-Risk | Balanced | Browser | Premium,"very high abandonment (15.0%), medium sessions (1484s), views 2 products, premium price ($324)"
+1,High-Risk | Quick | Shopper | Mid-Range,"very high abandonment (50.0%), short sessions (1s), views 1 products, mid-range ($311)"
+2,Low-Risk | Patient | Explorer | Budget,"low abandonment (10.0%), long sessions (2676s), views 13 products, low price ($249)"
+3,Low-Risk | Patient | Explorer | Budget,"low abandonment (5.0%), long sessions (2442s), views 5 products, low price ($302)"
+4,High-Risk | Quick | Shopper | Premium,"very high abandonment (29.0%), short sessions (4s), views 1 products, premium price ($331)"
+5,Medium-Risk | Patient | Explorer | Budget,"moderate abandonment (14.0%), long sessions (4245s), views 34 products, low price ($226)"
+6,Medium-Risk | Quick | Browser | Premium,"moderate abandonment (11.0%), short sessions (20s), views 2 products, premium price ($336)"
+7,Low-Risk | Balanced | Shopper | Mid-Range,"low abandonment (0.0%), medium sessions (163s), views 1 products, mid-range ($318)"
