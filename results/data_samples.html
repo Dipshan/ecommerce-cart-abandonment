@@ -1,0 +1,119 @@
+
+        <html>
+        <head>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #fff; }
+                h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 5px; margin-top: 30px; }
+                table { border-collapse: collapse; width: auto; margin-bottom: 20px; font-size: 11px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                th, td { border: 1px solid #ddd; padding: 4px 8px; text-align: left; white-space: nowrap; }
+                th { background-color: #f4f4f4; font-weight: 600; color: #333; }
+                tr:nth-child(even) { background-color: #f9f9f9; }
+                tr:hover { background-color: #f1f1f1; }
+                .container { overflow-x: auto; padding: 10px 0; }
+            </style>
+        </head>
+        <body>
+            <h1>Data Samples for Presentation</h1>
+        <h2>Raw Data</h2><div class='container'><table border="1" class="dataframe table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>event_time</th>
+      <th>event_type</th>
+      <th>product_id</th>
+      <th>category_id</th>
+      <th>category_code</th>
+      <th>brand</th>
+      <th>price</th>
+      <th>user_id</th>
+      <th>user_session</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2019-10-01 00:00:00+00:00</td>
+      <td>view</td>
+      <td>44600062</td>
+      <td>2103807459595387724</td>
+      <td>NaN</td>
+      <td>shiseido</td>
+      <td>35.790001</td>
+      <td>541312140</td>
+      <td>72d76fde-8bb3-4e00-8c23-a032dfed738c</td>
+    </tr>
+    <tr>
+      <td>2019-10-01 00:00:00+00:00</td>
+      <td>view</td>
+      <td>3900821</td>
+      <td>2053013552326770905</td>
+      <td>appliances.environment.water_heater</td>
+      <td>aqua</td>
+      <td>33.200001</td>
+      <td>554748717</td>
+      <td>9333dfbd-b87a-4708-9857-6336556b0fcc</td>
+    </tr>
+    <tr>
+      <td>2019-10-01 00:00:01+00:00</td>
+      <td>view</td>
+      <td>17200506</td>
+      <td>2053013559792632471</td>
+      <td>furniture.living_room.sofa</td>
+      <td>NaN</td>
+      <td>543.099976</td>
+      <td>519107250</td>
+      <td>566511c2-e2e3-422b-b695-cf8e6e792ca8</td>
+    </tr>
+  </tbody>
+</table></div><h2>Final Data</h2><div class='container'><table border="1" class="dataframe table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>duration_seconds</th>
+      <th>products_viewed</th>
+      <th>avg_price</th>
+      <th>max_price</th>
+      <th>brands_viewed</th>
+      <th>categories_viewed</th>
+      <th>num_carts</th>
+      <th>num_views</th>
+      <th>is_returning_user</th>
+      <th>is_abandoned</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>44.0</td>
+      <td>2</td>
+      <td>65.615005</td>
+      <td>66.900002</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>30.0</td>
+      <td>1</td>
+      <td>39.099998</td>
+      <td>39.099998</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>536.0</td>
+      <td>5</td>
+      <td>170.206680</td>
+      <td>592.010010</td>
+      <td>5</td>
+      <td>2</td>
+      <td>0</td>
+      <td>9</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table></div></body></html>

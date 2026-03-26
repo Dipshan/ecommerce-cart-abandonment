@@ -103,9 +103,9 @@ def main():
     """
     Main function to run the memory-safe processing pipeline.
     """
-    print("======================================================")
+    print("=" * 50)
     print("  STARTING MEMORY-SAFE DATA PROCESSING PIPELINE")
-    print("======================================================")
+    print("=" * 50)
     
     # --- STAGE 1: PROCESS OCTOBER ---
     start_oct_time = time.time()
@@ -113,7 +113,7 @@ def main():
     if sessions_oct is None:
         print("FATAL: October processing failed. Exiting.")
         return
-    print(f"✅ October processing complete in {(time.time() - start_oct_time) / 60:.2f} minutes.")
+    print(f"October processing complete in {(time.time() - start_oct_time) / 60:.2f} minutes.")
 
     # --- STAGE 2: PROCESS NOVEMBER ---
     start_nov_time = time.time()
@@ -121,7 +121,7 @@ def main():
     if sessions_nov is None:
         print("FATAL: November processing failed. Exiting.")
         return
-    print(f"✅ November processing complete in {(time.time() - start_nov_time) / 60:.2f} minutes.")
+    print(f"November processing complete in {(time.time() - start_nov_time) / 60:.2f} minutes.")
 
     # --- STAGE 3: COMBINE SESSION-LEVEL DATA ---
     print("\n--- 3. COMBINING SESSION-LEVEL DATA ---")
@@ -173,9 +173,9 @@ def main():
     print(sessions_df_model_ready['is_abandoned'].value_counts(normalize=True))
     
     print("\n======================================================")
-    print("  ✅✅✅ SCRIPT COMPLETE ✅✅✅")
+    print("  Script complete.")
     print(f"  Final file is ready at: {FINAL_OUTPUT_FILE}")
-    print("======================================================")
+    print("=" * 50)
 
 if __name__ == "__main__":
     total_script_start = time.time()

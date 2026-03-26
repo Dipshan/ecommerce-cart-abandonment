@@ -1,0 +1,4 @@
+duration_seconds,products_viewed,avg_price,max_price,brands_viewed,categories_viewed,num_carts,num_views,is_returning_user,is_abandoned
+44.0,2,65.615005,66.9,1,1,0,2,0,0
+30.0,1,39.1,39.1,0,1,0,2,0,0
+536.0,5,170.20668,592.01,5,2,0,9,0,0

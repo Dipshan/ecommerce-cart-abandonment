@@ -90,11 +90,11 @@ def main():
     Main function to run the full comprehensive modeling pipeline.
     This script is resumable.
     """
-    print("======================================================")
+    print("=" * 50)
     print("  STARTING COMPREHENSIVE & RESUMABLE MODELING PIPELINE")
     print("  (No scale_pos_weight, No max_price, GridSearch on Top 2)")
     print(f"  Using {os.cpu_count()} CPU cores.")
-    print("======================================================")
+    print("=" * 50)
 
     # List to hold all our result dictionaries
     all_results = []
@@ -155,7 +155,7 @@ def main():
     # --- STAGE 1: DEFAULT MODEL BAKE-OFF ---
     print("\n\n======================================================")
     print("  STAGE 1: DEFAULT PARAMETER BAKE-OFF")
-    print("======================================================")
+    print("=" * 50)
 
     models_to_run = [
         ('LogisticRegression', LogisticRegression(random_state=42, n_jobs=-1, max_iter=1000)),
@@ -185,7 +185,7 @@ def main():
     # --- STAGE 2: IDENTIFY TOP 2 MODELS ---
     print("\n\n======================================================")
     print("  STAGE 2: IDENTIFYING TOP 2 MODELS (by Weighted F1)")
-    print("======================================================")
+    print("=" * 50)
     
     if not model_scores:
          print("ERROR: No model scores found. Cannot determine top 2.")
@@ -203,7 +203,7 @@ def main():
     # --- STAGE 3: GRIDSEARCHCV FOR TOP 2 ---
     print("\n\n======================================================")
     print("  STAGE 3: HYPERPARAMETER TUNING (GridSearchCV)")
-    print("======================================================")
+    print("=" * 50)
 
     param_grids = {
         'LogisticRegression': {'C': [0.1, 1, 10], 'class_weight': [None, 'balanced']},
@@ -263,7 +263,7 @@ def main():
     # --- STAGE 4: SAVE FINAL CSV REPORT ---
     print("\n\n======================================================")
     print("  STAGE 4: SAVING FINAL CSV REPORT")
-    print("======================================================")
+    print("=" * 50)
     
     # Load the definitive log file, which has all results
     try:
@@ -274,7 +274,7 @@ def main():
         
         results_df.to_csv(FINAL_REPORT_FILE, index=False)
         
-        print(f"✅ All model results saved to {FINAL_REPORT_FILE}")
+        print(f"All model results saved to {FINAL_REPORT_FILE}")
         print("\nFinal Model Leaderboard (by Weighted F1):")
         print(results_df[['model_name', 'weighted_avg_f1', 'abandoned_recall', 'abandoned_precision', 'train_time_sec']])
     
@@ -285,9 +285,9 @@ def main():
 
     
     print("\n======================================================")
-    print("  ✅✅✅ COMPREHENSIVE BAKE-OFF COMPLETE ✅✅✅")
+    print("  Comprehensive bake-off complete.")
     print(f"  All reports and plots saved to: {RESULTS_DIR}")
-    print("======================================================")
+    print("=" * 50)
 
 if __name__ == "__main__":
     total_script_start = time.time()
