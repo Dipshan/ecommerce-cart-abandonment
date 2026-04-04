@@ -26,7 +26,7 @@ class MassiveEventClustering:
         
     def load_and_combine_raw_events(self):
         """Load all 23M+ raw events from both months"""
-        print("📥 LOADING 23M+ RAW EVENTS...")
+        print("LOADING 23M+ RAW EVENTS...")
         
         # Load October events
         print(f"  Loading October data from {self.oct_file}...")
@@ -34,7 +34,7 @@ class MassiveEventClustering:
             oct_events = pd.read_parquet(self.oct_file)
             print(f"  October: {len(oct_events):,} events")
         except FileNotFoundError:
-            print(f"  ❌ ERROR: Could not find {self.oct_file}")
+            print(f"  ERROR: Could not find {self.oct_file}")
             raise
 
         # Load November events  
@@ -43,7 +43,7 @@ class MassiveEventClustering:
             nov_events = pd.read_parquet(self.nov_file)
             print(f"  November: {len(nov_events):,} events")
         except FileNotFoundError:
-            print(f"  ❌ ERROR: Could not find {self.nov_file}")
+            print(f"  ERROR: Could not find {self.nov_file}")
             raise
         
         # Combine all events
@@ -56,7 +56,7 @@ class MassiveEventClustering:
         
     def create_session_features_from_events(self):
         """Process 23M events into session-level features"""
-        print("\n🔨 PROCESSING 23M EVENTS INTO SESSION FEATURES...")
+        print("\nPROCESSING 23M EVENTS INTO SESSION FEATURES...")
         
         # Filter valid events (price > 0)
         valid_events = self.raw_events[self.raw_events['price'] > 0].copy()
@@ -101,7 +101,7 @@ class MassiveEventClustering:
             'is_abandoned': 'max'
         }).reset_index()
         
-        print(f"✅ CREATED {len(self.session_features):,} SESSIONS FROM 23M EVENTS")
+        print(f"CREATED {len(self.session_features):,} SESSIONS FROM 23M EVENTS")
         
     def _process_event_chunk(self, event_chunk):
         """Process a chunk of events into session features"""
@@ -186,11 +186,11 @@ class MassiveEventClustering:
             self.session_features['unique_products'] / (self.session_features['total_events'] + 1)
         )
         
-        print(f"✅ ENGINEERED {self.session_features.shape[1]} FEATURES FOR CLUSTERING")
+        print(f"ENGINEERED {self.session_features.shape[1]} FEATURES FOR CLUSTERING")
         
     def perform_clustering(self, n_clusters=8):
         """Perform K-means clustering on session features"""
-        print(f"\n🎪 PERFORMING CLUSTERING ON {len(self.session_features):,} SESSIONS...")
+        print(f"\nPERFORMING CLUSTERING ON {len(self.session_features):,} SESSIONS...")
         
         # Select features for clustering
         clustering_features = [
@@ -227,13 +227,13 @@ class MassiveEventClustering:
         
         self.session_features['behavior_cluster'] = kmeans.fit_predict(X_scaled)
         
-        print(f"✅ CLUSTERING COMPLETE - {n_clusters} CLUSTERS CREATED")
+        print(f"CLUSTERING COMPLETE - {n_clusters} CLUSTERS CREATED")
         
         return kmeans, X_scaled
     
     def analyze_clusters(self):
         """Analyze and describe the clusters"""
-        print("\n📊 ANALYZING CLUSTER BEHAVIORS...")
+        print("\nANALYZING CLUSTER BEHAVIORS...")
         
         cluster_analysis = self.session_features.groupby('behavior_cluster').agg({
             'duration_seconds': ['mean', 'std'],
@@ -257,14 +257,14 @@ class MassiveEventClustering:
             cluster_analysis['session_count'] / len(self.session_features) * 100
         ).round(1)
         
-        print("📈 CLUSTER SUMMARY:")
+        print("CLUSTER SUMMARY:")
         print(cluster_analysis)
         
         return cluster_analysis
 
     def create_intelligent_cluster_names(self, cluster_analysis):
         """Create meaningful names for each cluster based on behavior patterns"""
-        print("\n🏷️ CREATING INTELLIGENT CLUSTER NAMES...")
+        print("\nCREATING INTELLIGENT CLUSTER NAMES...")
         
         cluster_names = {}
         cluster_descriptions = {}
@@ -340,7 +340,7 @@ class MassiveEventClustering:
 
     def visualize_clusters(self, cluster_analysis, cluster_names, cluster_descriptions):
         """Create comprehensive cluster visualizations"""
-        print("\n🎨 CREATING CLUSTER VISUALIZATIONS...")
+        print("\nCREATING CLUSTER VISUALIZATIONS...")
         
         plt.figure(figsize=(20, 12))
         
@@ -443,11 +443,11 @@ class MassiveEventClustering:
         plt.tight_layout()
         output_path = 'results/23m_event_clustering_results_detailed.png'
         plt.savefig(output_path, dpi=300, bbox_inches='tight')
-        print(f"✅ VISUALIZATIONS SAVED AS '{output_path}'")
+        print(f"VISUALIZATIONS SAVED AS '{output_path}'")
 
     def save_results(self, cluster_names, cluster_descriptions):
         """Save all results with cluster names"""
-        print("\n💾 SAVING RESULTS TO 'results/' DIRECTORY...")
+        print("\nSAVING RESULTS TO 'results/' DIRECTORY...")
         
         # Add cluster names to session features
         self.session_features['cluster_name'] = self.session_features['behavior_cluster'].map(cluster_names)
@@ -481,13 +481,13 @@ class MassiveEventClustering:
         })
         name_mapping.to_csv('results/cluster_names_mapping.csv', index=False)
         
-        print("✅ RESULTS SAVED SUCCESSFULLY")
+        print("RESULTS SAVED SUCCESSFULLY")
 
 def main():
     """Main execution function"""
-    print("=" * 60)
-    print("🚀 23 MILLION EVENT SESSION CLUSTERING PIPELINE")
-    print("=" * 60)
+    print("=" * 50)
+    print("23 MILLION EVENT SESSION CLUSTERING PIPELINE")
+    print("=" * 50)
     
     # Initialize the clustering engine with CORRECT PATHS
     cluster_engine = MassiveEventClustering(
@@ -519,7 +519,7 @@ def main():
     # Step 8: Save everything
     cluster_engine.save_results(cluster_names, cluster_descriptions)
     
-    print("\n🎉 PIPELINE COMPLETE!")
+    print("\nPIPELINE COMPLETE!")
 
 if __name__ == "__main__":
     main()

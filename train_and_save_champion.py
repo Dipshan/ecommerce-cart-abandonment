@@ -20,9 +20,9 @@ MODEL_SAVE_PATH = os.path.join(RESULTS_DIR, "champion_xgb_model.json")
 PLOT_SAVE_PATH = os.path.join(RESULTS_DIR, "champion_feature_importance.png")
 
 def main():
-    print("======================================================")
+    print("=" * 50)
     print("  CHAMPION MODEL TRAINING & SAVING SCRIPT")
-    print("======================================================")
+    print("=" * 50)
 
     # --- 1. Load Data & Define Features ---
     print(f"\n--- 1. Loading {DATA_FILE} ---")
@@ -107,9 +107,9 @@ def main():
     print(f"  -> Feature importance plot saved to {PLOT_SAVE_PATH}")
     
     print("\n======================================================")
-    print("  ✅✅✅ SCRIPT COMPLETE ✅✅✅")
+    print("  Script complete.")
     print(f"  Champion model is saved and ready for use.")
-    print("======================================================")
+    print("=" * 50)
 
 if __name__ == "__main__":
     main()
